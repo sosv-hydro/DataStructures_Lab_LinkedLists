@@ -39,5 +39,10 @@ public abstract class AbstractSLList<E> implements LinkedList<E> {
 			next = null; 
 		}
 	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
+		
+	}
 
 }

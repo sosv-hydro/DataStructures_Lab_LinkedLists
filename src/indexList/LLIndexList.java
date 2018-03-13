@@ -138,4 +138,9 @@ public class LLIndexList<E> implements IndexList<E>{
 				a[size()] = null;
 		return a;
 	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
+		
+	}
 }

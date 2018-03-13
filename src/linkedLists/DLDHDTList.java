@@ -153,4 +153,8 @@ public class DLDHDTList<E> extends AbstractDLList<E> {
 	    }
 	}
 
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
+		
+	}
 }

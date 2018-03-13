@@ -135,6 +135,11 @@ public class SLFLList<E> extends SLList<E> {
 	public Node<E> createNewNode() {
 		return new SNode<E>();
 	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
+		
+	}
 
 	
 

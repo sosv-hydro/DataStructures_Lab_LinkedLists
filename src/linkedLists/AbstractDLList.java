@@ -56,4 +56,9 @@ public abstract class AbstractDLList<E> implements LinkedList<E> {
 		}
 		
 	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
+		
+	}
 }

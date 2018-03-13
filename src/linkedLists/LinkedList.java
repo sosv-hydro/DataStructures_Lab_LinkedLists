@@ -81,6 +81,6 @@ public interface LinkedList<E> extends Cloneable {
 	 */
 	Node<E> createNewNode(); 
 	
-//	Object clone() throws CloneNotSupportedException;
+	Object clone() throws CloneNotSupportedException;
 
 }
