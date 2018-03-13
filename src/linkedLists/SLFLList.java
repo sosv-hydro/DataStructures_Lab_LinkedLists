@@ -7,10 +7,8 @@ package linkedLists;
  *
  */
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
-
-import linkedLists.LinkedList;
-import linkedLists.AbstractSLList.SNode;
 
 public class SLFLList<E> extends SLList<E> {
 	private SNode<E> first, last; // reference to the first node and to the last
@@ -23,20 +21,31 @@ public class SLFLList<E> extends SLList<E> {
 	}
 
 	public void addFirstNode(Node<E> nuevo) {
-		((SNode<E>) nuevo).setNext(first);
-		first = (SNode<E>) nuevo;
+		SNode<E> newFirstNode = (SNode<E>) nuevo;
+		if (length == 0) {
+			first = newFirstNode;
+			last = newFirstNode;
+		} else {
+			newFirstNode.setNext(first);
+			first = newFirstNode;
+		}
 		length++;
 
 	}
 
 	public void addNodeAfter(Node<E> target, Node<E> nuevo) {
-		((SNode<E>) target).setNext((SNode<E>) nuevo);
-
-		if ((SNode<E>) target == last) {
-			last = ((SNode<E>) nuevo);
+		SNode<E> ts = (SNode<E>) target;
+		SNode<E> ns = (SNode<E>) nuevo;
+		if (ts == last) {
+			last.setNext(ns);
+			last = ns;
 		} else {
-			((SNode<E>) nuevo).setNext(((SNode<E>) target).getNext());
-			((SNode<E>) target).setNext((SNode<E>) nuevo);
+			SNode<E> temp = first;
+			while (temp != ts) {
+				temp = temp.getNext();
+			}
+			ns.setNext(temp.getNext());
+			temp.setNext(ns);
 		}
 		length++;
 	}
@@ -45,74 +54,88 @@ public class SLFLList<E> extends SLList<E> {
 		SNode<E> ts = (SNode<E>) target;
 		SNode<E> ns = (SNode<E>) nuevo;
 
-		ns.setNext(ts);
-		if (ts == first)
-			first = ns;
-		else {
-			SNode<E> p = first;
-			while (p.getNext() != ts)
-				p.getNext();
-			p.setNext(ns);
-			length++;
+		if (ts == first) {
+			this.addFirstNode(ns);
+		} else {
+			SNode<E> nb4 = (SNode<E>) this.getNodeBefore(ts);
+			ns.setNext(nb4.getNext());
+			nb4.setNext(ns);
 		}
+		length++;
 	}
 
 	public Node<E> getFirstNode() throws NoSuchElementException {
-		if (first == null)
+		if (length == 0)
 			throw new NoSuchElementException("getFirstNode() : linked list is empty...");
 		return first;
 	}
 
-	public Node<E> getLastNode() throws NoSuchElementException  {
+	public Node<E> getLastNode() throws NoSuchElementException {
+		if (length == 0)
+			throw new NoSuchElementException();
 		return last;
-		
+
 	}
 
 	public Node<E> getNodeAfter(Node<E> target) throws NoSuchElementException {
-		SNode<E> aNode = ((SNode<E>) target).getNext(); 
-		if (aNode == null)  
-			throw new NoSuchElementException("getNextNode(...) : target is the last node."); 
-		else 
-			return aNode;
+		SNode<E> ts = (SNode<E>) target;
+		if (length == 0 || ts == last)
+			throw new NoSuchElementException();
+
+		SNode<E> temp = first;
+		while (temp != ts) {
+			temp = temp.getNext();
+		}
+		return temp.getNext();
 	}
 
 	public Node<E> getNodeBefore(Node<E> target) throws NoSuchElementException {
 		// Pre: target is a node in the list
-				if (target == first)  
-					throw new NoSuchElementException("getPrevNode(...) : target is the first node."); 
-				else {
-					if (target == first) 
-						return null; 
-					else { 
-						SNode<E> prev = first; 
-						while (prev != null && prev.getNext() != target) 
-							prev = prev.getNext();  
-						return prev; 
-					}
-				}
+		SNode<E> ts = (SNode<E>) target;
+		if (length == 0 || ts == first)
+			throw new NoSuchElementException();
+
+		SNode<E> temp = first;
+		int index = 0;
+		while (temp != ts) {
+			temp = temp.getNext();
+			index++;
+		}
+		temp = first;
+		for (int i = 1; i < index; i++)
+			temp = temp.getNext();
+		return temp;
 	}
 
 	public int length() {
-		
-		return this.length;
+		return length;
 	}
 
 	public void removeNode(Node<E> target) {
-		if (target == first) 
+		SNode<E> tar = (SNode<E>) target;
+
+		if (tar == first) {
+			SNode<E> temp = first;
 			first = first.getNext();
-	
-			
-		else { 
-			SNode<E> prevNode = (SNode<E>) this.getNodeBefore(target); 
-			prevNode.setNext(((SNode<E>) target).getNext()); 
+			temp.setNext(null);
+		} else if (tar == last) {
+			SNode<E> nb4 = (SNode<E>) this.getNodeBefore(tar);
+			last = nb4;
+			nb4.setNext(null);
+		} else {
+			SNode<E> nb4 = (SNode<E>) this.getNodeBefore(tar);
+			SNode<E> nafter = (SNode<E>) this.getNodeAfter(tar);
+			nb4.getNext().setNext(null);
+			nb4.setNext(nafter);
 		}
-		((SNode<E>) target).clean();   // clear all references from target
-		length--; 
+		length--;
 
 	}
 
 	public Node<E> createNewNode() {
 		return new SNode<E>();
 	}
+
+	
 
 }
